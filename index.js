@@ -15,4 +15,27 @@ const connection = mysql.createConnection({
   connection.connect(err => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
+    init();
   });
+
+  const questions = [{
+    type: "list",
+    message: "What would you like to do?",
+    name: "answer",
+    choices: [
+    "View all employees by department",
+    "View all employess by manager",
+    "Add employee",
+    "Remove employee",
+    "Update employee role",
+    "Update employee manager",
+    "View all roles"
+    ]
+  }];
+
+  function init() {
+      prompt(questions).then((answer) => (
+          console.log("success")
+      ))
+      }
+

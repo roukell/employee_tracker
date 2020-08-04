@@ -34,7 +34,14 @@ const questions = [{
 }];
 
 function init() {
-    prompt(questions).then((answer) => (
-        console.log("success")
-    ))
+    prompt(questions.then((answer) => {
+        switch (answer.action) {
+            case "View all employees by department":
+            printAllByDepartment();
+        }}
+    ));
+}
+
+function printAllByDepartment() {
+    
 }

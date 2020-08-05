@@ -21,15 +21,12 @@ connection.connect(err => {
     init();
 });
 
-const question = [{
+const generalQuestion = {
     type: "list",
     message: "What would you like to do?",
     name: "action",
     choices: [
-        "View all employees by department",
-        "View all employess by manager",
-        "View all employess by role",
-        "View all roles",
+        "View all employees details",
         "Add department",
         "Add employee",
         "Add role",
@@ -39,15 +36,34 @@ const question = [{
         "Delete departments, roles, and employees",
         "View the total utilized budget of a department"
     ]
-}];
+};
+
+const viewEmployeeQuestion = {
+    type: "list",
+    message: "View all employees by?",
+    name: "viewBy",
+    choices: [
+        "Department",
+        "Manager",
+        "Role",
+        "View all roles"
+    ]
+};
+
+
 
 function init() {
-    prompt(question)
+    prompt(generalQuestion)
         .then((answer) => {
             switch (answer.action) {
-                case "View all employees by department":
-                    printAllByDepartment();
-                    break;
+                case "View all employees details":
+                    prompt(viewEmployeeQuestion).then((answer) => {
+                        switch (answer.viewBy) {
+                            case "Department":
+                            printAllByDepartment();
+                            break;   
+                        }
+                    })   
             }
         });
 }

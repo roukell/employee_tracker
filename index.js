@@ -57,13 +57,7 @@ function init() {
         .then((answer) => {
             switch (answer.action) {
                 case "View all employees details":
-                    prompt(viewEmployeeQuestion).then((answer) => {
-                        switch (answer.viewBy) {
-                            case "Department":
-                            printAllByDepartment();
-                            break;   
-                        }
-                    })   
+                viewAllEmployeesDetails();
             }
         });
 }
@@ -96,4 +90,23 @@ async function printAllByDepartment() {
 
 function getAllDepartments() {
     return connection.query(`SELECT name FROM department`)
+}
+
+function viewAllEmployeesDetails() {
+    prompt(viewEmployeeQuestion).then((answer) => {
+        switch (answer.viewBy) {
+            case "Department":
+            printAllByDepartment();
+            break;
+            // case "Manager":
+            // printAllByManager();
+            // break; 
+            // case "Role":
+            // printAllByRole();
+            // break; 
+            // case "View all roles":
+            // printAll();
+            // break;    
+        }
+    })   
 }

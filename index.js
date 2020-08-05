@@ -15,16 +15,11 @@ const connection = mysql.createConnection({
 
 connection.query = util.promisify(connection.query);
 
-// connection.query(query, (result)=>{console.log(result)});
-// connection.query(query).then((result)=>{console.log(result)});
-
 connection.connect(err => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     init();
 });
-
-
 
 const question = [{
     type: "list",
@@ -41,18 +36,6 @@ const question = [{
         "View all roles"
     ]
 }];
-
-// const departmentQuestion = [{
-//     type: "list",
-//     message: "Which department would you like to view?",
-//     name: "departmentChoice",
-//     choices: [
-//         "Managment",
-//         "Engineering",
-//         "Development",
-//         "Marketing"
-//     ]
-// }];
 
 function init() {
     prompt(question)

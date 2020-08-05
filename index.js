@@ -18,10 +18,10 @@ connection.connect(err => {
     init();
 });
 
-const questions = [{
+const question = [{
     type: "list",
     message: "What would you like to do?",
-    name: "answer",
+    name: "action",
     choices: [
         "View all employees by department",
         "View all employess by manager",
@@ -34,14 +34,21 @@ const questions = [{
 }];
 
 function init() {
-    prompt(questions.then((answer) => {
+    prompt(question)
+    .then((answer) => {
         switch (answer.action) {
             case "View all employees by department":
-            printAllByDepartment();
-        }}
-    ));
+              printAllByDepartment();
+              break;
+    }
+});
 }
 
-function printAllByDepartment() {
-    
+const printAllByDepartment = () => {
+    let query = "SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE department.id = ?;"
+
+    connection.query(query, [1], function(err, res) {
+        if (err) throw err;
+        console.log(res);
+        })
 }

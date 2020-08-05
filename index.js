@@ -3,6 +3,7 @@ const prompt = inquirer.createPromptModule();
 const fs = require("fs");
 const mysql = require("mysql");
 const cTable = require('console.table');
+const util = require("util");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -12,11 +13,18 @@ const connection = mysql.createConnection({
     database: "employee_db"
 });
 
+connection.query = util.promisify(connection.query);
+
+// connection.query(query, (result)=>{console.log(result)});
+// connection.query(query).then((result)=>{console.log(result)});
+
 connection.connect(err => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     init();
 });
+
+
 
 const question = [{
     type: "list",
@@ -25,6 +33,7 @@ const question = [{
     choices: [
         "View all employees by department",
         "View all employess by manager",
+        "Add department",
         "Add employee",
         "Remove employee",
         "Update employee role",
@@ -33,22 +42,55 @@ const question = [{
     ]
 }];
 
+// const departmentQuestion = [{
+//     type: "list",
+//     message: "Which department would you like to view?",
+//     name: "departmentChoice",
+//     choices: [
+//         "Managment",
+//         "Engineering",
+//         "Development",
+//         "Marketing"
+//     ]
+// }];
+
 function init() {
     prompt(question)
-    .then((answer) => {
-        switch (answer.action) {
-            case "View all employees by department":
-              printAllByDepartment();
-              break;
-    }
-});
+        .then((answer) => {
+            switch (answer.action) {
+                case "View all employees by department":
+                    printAllByDepartment();
+                    break;
+            }
+        });
 }
 
-const printAllByDepartment = () => {
-    let query = "SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id WHERE department.id = ?;"
+async function printAllByDepartment() {
+    let query = `
+            SELECT * FROM employee 
+            LEFT JOIN role 
+            ON employee.role_id = role.id LEFT JOIN department
+            ON department.id = role.department_id
+            WHERE department.name = ?
+        `;
 
-    connection.query(query, [1], function(err, res) {
-        if (err) throw err;
-        console.log(res);
+    let question = {
+        type: "list",
+        message: "Which department would you like to view?",
+        name: "departmentChoice",
+        choices: await getAllDepartments()
+    }
+
+    prompt(question).then(({
+        departmentChoice
+    }) => {
+        connection.query(query, [departmentChoice], function (err, res) {
+            if (err) throw err;
+            console.table(res);
         })
+    })
+}
+
+function getAllDepartments() {
+    return connection.query(`SELECT name FROM department`)
 }

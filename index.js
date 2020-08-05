@@ -28,12 +28,16 @@ const question = [{
     choices: [
         "View all employees by department",
         "View all employess by manager",
+        "View all employess by role",
+        "View all roles",
         "Add department",
         "Add employee",
+        "Add role",
         "Remove employee",
         "Update employee role",
         "Update employee manager",
-        "View all roles"
+        "Delete departments, roles, and employees",
+        "View the total utilized budget of a department"
     ]
 }];
 

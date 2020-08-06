@@ -27,7 +27,7 @@ const generalQuestion = {
     message: "What would you like to do?",
     name: "action",
     choices: [
-        "View all employees details"
+        "View all employees details",
         // "Add department",
         // "Add employee",
         // "Add role",
@@ -36,6 +36,7 @@ const generalQuestion = {
         // "Update employee manager",
         // "Delete departments, roles, and employees",
         // "View the total utilized budget of a department"
+        "End application"
     ]
 };
 
@@ -51,14 +52,15 @@ const viewEmployeeQuestion = {
     ]
 };
 
-
-
 function init() {
     prompt(generalQuestion)
         .then((answer) => {
             switch (answer.action) {
                 case "View all employees details":
                     viewAllEmployeesDetails();
+                    break;
+                case "End application":
+                    process.exit();
             }
         });
 }
@@ -84,7 +86,6 @@ function viewAllEmployeesDetails() {
     })
 }
 
-
 async function printAllByDepartment() {
     let query = `
             SELECT * FROM employee 
@@ -101,7 +102,7 @@ async function printAllByDepartment() {
         choices: await getAllDepartments()
     }
 
-    console.log(question);
+    // console.log(question);
 
     prompt(question).then(({departmentChoice}) => {
         connection.query(query, [departmentChoice], function (err, res) {
@@ -132,12 +133,13 @@ async function printAllByManager() {
         choices: await getAllManagers()
     }
 
-    console.log(question);
+    // console.log(question);
 
     prompt(question).then(({managerChoice}) => {
         connection.query(query, [managerChoice], function (err, res) {
             if (err) throw err;
             console.table(res);
+            init();
         })
     })
 }
@@ -150,7 +152,7 @@ async function getAllManagers() {
     let query = await connection.query(`SELECT distinct manager_id FROM employee WHERE manager_id IS NOT NULL`);
     let newQuery = query.map(obj => {
         let rObj = { name: obj.manager_id}
-        console.log(rObj);
+        // console.log(rObj);
         return rObj
      })
      return newQuery;

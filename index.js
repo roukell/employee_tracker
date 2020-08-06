@@ -88,7 +88,7 @@ function viewAllEmployeesDetails() {
 
 async function printAllByDepartment() {
     let query = `
-            SELECT * FROM employee 
+            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
             LEFT JOIN role 
             ON employee.role_id = role.id LEFT JOIN department
             ON department.id = role.department_id
@@ -115,7 +115,7 @@ async function printAllByDepartment() {
 
 async function printAllByManager() {
     let query = `
-    SELECT employee.id, employee.code, employee.manager_id, employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee
+    SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee
 
     LEFT JOIN role
     ON employee.role_id = role.id

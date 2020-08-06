@@ -27,7 +27,7 @@ const generalQuestion = {
     message: "What would you like to do?",
     name: "action",
     choices: [
-        "View all employees details",
+        "View employee details",
         // "Add department",
         // "Add employee",
         // "Add role",
@@ -48,7 +48,7 @@ const viewEmployeeQuestion = {
         "Department",
         "Manager",
         // "Role",
-        "View all roles"
+        "View all employees"
     ]
 };
 
@@ -56,7 +56,7 @@ function init() {
     prompt(generalQuestion)
         .then((answer) => {
             switch (answer.action) {
-                case "View all employees details":
+                case "View employee details":
                     viewAllEmployeesDetails();
                     break;
                 case "End application":
@@ -80,7 +80,7 @@ function viewAllEmployeesDetails() {
                 // printAllByRole();
                 // break; 
 
-                case "View all roles":
+                case "View all employees":
                 printAll();
                 break;    
         }

@@ -46,9 +46,9 @@ const viewEmployeeQuestion = {
     name: "viewBy",
     choices: [
         "Department",
-        "Manager"
+        "Manager",
         // "Role",
-        // "View all roles"
+        "View all roles"
     ]
 };
 
@@ -79,9 +79,10 @@ function viewAllEmployeesDetails() {
                 // case "Role":
                 // printAllByRole();
                 // break; 
-                // case "View all roles":
-                // printAll();
-                // break;    
+
+                case "View all roles":
+                printAll();
+                break;    
         }
     })
 }
@@ -142,6 +143,21 @@ async function printAllByManager() {
             init();
         })
     })
+}
+
+async function printAll() {
+    let query = `
+            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
+            LEFT JOIN role 
+            ON employee.role_id = role.id LEFT JOIN department
+            ON department.id = role.department_id
+        `;
+
+        await connection.query(query, function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            init();
+        })
 }
 
 function getAllDepartments() {

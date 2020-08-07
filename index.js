@@ -45,7 +45,7 @@ const viewEmployeeQuestion = {
 const addInfoQuestion = {
     type: "list",
     message: "What information would you like to add?",
-    name: "addNewDetails",
+    name: "addNew",
     choices: [
         "Add a new department",
         "Add a new employee",
@@ -68,6 +68,9 @@ function init() {
                 case "View employee details":
                     viewAllEmployeesDetails();
                     break;
+                case "Add new information":
+                    addNewInfo();
+                    break;
                 case "End application":
                     process.exit();
             }
@@ -78,20 +81,38 @@ function viewAllEmployeesDetails() {
     prompt(viewEmployeeQuestion).then((answer) => {
         switch (answer.viewBy) {
             case "Department":
-                printAllByDepartment();
+            printAllByDepartment();
+            break;
+
+            case "Manager":
+            printAllByManager();
+            break;
+
+            case "Role":
+            printAllByRole();
+            break; 
+
+            case "View all employees":
+            printAll();
+            break;    
+        }
+    })
+}
+
+function addNewInfo() {
+    prompt(addInfoQuestion).then((answer) => {
+        switch (answer.addNew) {
+            case "Add a new department":
+                addNewDepartment();
                 break;
 
-                case "Manager":
-                printAllByManager();
-                break;
+            // case "Add a new employee":
+            //     addNewEmployee();
+            //     break;
 
-                case "Role":
-                printAllByRole();
-                break; 
-
-                case "View all employees":
-                printAll();
-                break;    
+            // case "Add a new role":
+            //     addNewRole();
+            //     break;    
         }
     })
 }

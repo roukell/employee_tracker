@@ -271,8 +271,8 @@ function addNewDepartment() {
         message: "What is your new department name?",
         name: "name"
       }];
-    
-    prompt(question).then((answer) => {
+
+        prompt(question).then((answer) => {
         connection.query('INSERT INTO department (id, name) VALUES (?, ?)', [answer.id, answer.name], (err, result) => {
             if (err) throw err;
             console.log("Success!"); 
@@ -294,6 +294,7 @@ function addNewDepartment() {
         })
     })
 }
+
 
 
 

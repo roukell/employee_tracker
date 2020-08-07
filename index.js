@@ -14,14 +14,6 @@ const connection = mysql.createConnection({
     database: "employee_db"
 });
 
-connection.query = util.promisify(connection.query);
-
-connection.connect(err => {
-    if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    init();
-});
-
 const generalQuestion = {
     type: "list",
     message: "What would you like to do?",
@@ -51,6 +43,14 @@ const viewEmployeeQuestion = {
         "View all employees"
     ]
 };
+
+connection.query = util.promisify(connection.query);
+
+connection.connect(err => {
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    init();
+});
 
 function init() {
     prompt(generalQuestion)

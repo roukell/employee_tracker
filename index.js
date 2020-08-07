@@ -20,9 +20,7 @@ const generalQuestion = {
     name: "action",
     choices: [
         "View employee details",
-        // "Add department",
-        // "Add employee",
-        // "Add role",
+        "Add new information",
         // "Remove employee",
         // "Update employee role",
         // "Update employee manager",
@@ -41,6 +39,17 @@ const viewEmployeeQuestion = {
         "Manager",
         "Role",
         "View all employees"
+    ]
+};
+
+const addInfoQuestion = {
+    type: "list",
+    message: "What information would you like to add?",
+    name: "addNewDetails",
+    choices: [
+        "Add a new department",
+        "Add a new employee",
+        "Add a new role"
     ]
 };
 

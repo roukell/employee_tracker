@@ -53,6 +53,17 @@ const addInfoQuestion = {
     ]
 };
 
+const exitQuestion = {
+    type: "list",
+    message: "Would you like to do now?",
+    name: "action",
+    choices: [
+        "View results",
+        "Edit more details",
+        "End application"
+    ]
+};
+
 connection.query = util.promisify(connection.query);
 
 connection.connect(err => {
@@ -103,8 +114,8 @@ function addNewInfo() {
     prompt(addInfoQuestion).then((answer) => {
         switch (answer.addNew) {
             case "Add a new department":
-                addNewDepartment();
-                break;
+            addNewDepartment();
+            break;
 
             // case "Add a new employee":
             //     addNewEmployee();
@@ -239,6 +250,49 @@ async function getAllRoles() {
         return rObj
      })
      return newQuery;
+}
+
+function viewAllDepartments () {
+    connection.query((`SELECT * FROM department`), (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        process.exit();
+    })
+}
+
+function addNewDepartment() {
+    const question = [{
+        type: "input",
+        message: "What is your new department ID? (Do not use the same ID)",
+        name: "id"
+      },
+      {
+        type: "input",
+        message: "What is your new department name?",
+        name: "name"
+      }];
+    
+    prompt(question).then((answer) => {
+        connection.query('INSERT INTO department (id, name) VALUES (?, ?)', [answer.id, answer.name], (err, result) => {
+            if (err) throw err;
+            console.log("Success!"); 
+            
+            prompt(exitQuestion).then((answer) => {
+                switch (answer.action) {
+                    case "View results":
+                    viewAllDepartments();
+                    break;
+
+                    case "Edit more details":
+                    init();
+                    break;
+
+                    case "End application":
+                    process.exit();
+                }
+            })
+        })
+    })
 }
 
 

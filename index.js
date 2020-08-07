@@ -39,7 +39,7 @@ const viewEmployeeQuestion = {
     choices: [
         "Department",
         "Manager",
-        // "Role",
+        "Role",
         "View all employees"
     ]
 };
@@ -76,9 +76,9 @@ function viewAllEmployeesDetails() {
                 printAllByManager();
                 break;
 
-                // case "Role":
-                // printAllByRole();
-                // break; 
+                case "Role":
+                printAllByRole();
+                break; 
 
                 case "View all employees":
                 printAll();
@@ -145,6 +145,33 @@ async function printAllByManager() {
     })
 }
 
+async function printAllByRole() {
+    let query = `
+            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
+            LEFT JOIN role 
+            ON employee.role_id = role.id LEFT JOIN department
+            ON department.id = role.department_id
+            WHERE role.title = ?
+        `;
+
+    let question = {
+        type: "list",
+        message: "Which role would you like to view?",
+        name: "roleChoice",
+        choices: await getAllRoles()
+    }
+
+    // console.log(question);
+
+    prompt(question).then(({roleChoice}) => {
+        connection.query(query, [roleChoice], function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            init();
+        })
+    })
+}
+
 async function printAll() {
     let query = `
             SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
@@ -168,6 +195,16 @@ async function getAllManagers() {
     let query = await connection.query(`SELECT distinct manager_id FROM employee WHERE manager_id IS NOT NULL`);
     let newQuery = query.map(obj => {
         let rObj = { name: obj.manager_id}
+        // console.log(rObj);
+        return rObj
+     })
+     return newQuery;
+}
+
+async function getAllRoles() {
+    let query = await connection.query(`SELECT title FROM role`);
+    let newQuery = query.map(obj => {
+        let rObj = { name: obj.title}
         // console.log(rObj);
         return rObj
      })

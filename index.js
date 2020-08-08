@@ -21,9 +21,8 @@ const generalQuestion = {
     choices: [
         "View employee details",
         "Add new information",
-        // "Remove employee",
-        // "Update employee role",
-        // "Update employee manager",
+        "Update information",
+        // "Delete information",
         // "Delete departments, roles, and employees",
         // "View the total utilized budget of a department"
         "End application"
@@ -50,6 +49,16 @@ const addInfoQuestion = {
         "Add a new department",
         "Add a new employee",
         "Add a new role"
+    ]
+};
+
+const updateInfoQuestion = {
+    type: "list",
+    message: "What information would you like to update?",
+    name: "update",
+    choices: [
+        "Update employee's role",
+        "Update employee's manager",
     ]
 };
 
@@ -81,6 +90,9 @@ function init() {
                     break;
                 case "Add new information":
                     addNewInfo();
+                    break;
+                case "Update information":
+                    updateInfo();
                     break;
                 case "End application":
                     process.exit();
@@ -128,9 +140,23 @@ function addNewInfo() {
     })
 }
 
+function updateInfo() {
+    prompt(updateInfoQuestion).then((answer) => {
+        switch (answer.update) {
+            case "Update employee's role":
+                updateRole();
+                break;
+
+                // case "Update employee's manager":
+                // updateManager();
+                // break;  
+        }
+    })
+}
+
 async function printAllByDepartment() {
     let query = `
-            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
+            SELECT employee.id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
             LEFT JOIN role 
             ON employee.role_id = role.id LEFT JOIN department
             ON department.id = role.department_id
@@ -159,7 +185,7 @@ async function printAllByDepartment() {
 
 async function printAllByManager() {
     let query = `
-    SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee
+    SELECT employee.id, first_name, last_name, title, salary, name AS department, manager_id FROM employee
 
     LEFT JOIN role
     ON employee.role_id = role.id
@@ -192,7 +218,7 @@ async function printAllByManager() {
 
 async function printAllByRole() {
     let query = `
-            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
+            SELECT employee.id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
             LEFT JOIN role 
             ON employee.role_id = role.id LEFT JOIN department
             ON department.id = role.department_id
@@ -221,7 +247,7 @@ async function printAllByRole() {
 
 async function printAll() {
     let query = `
-            SELECT code AS employee_id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
+            SELECT employee.id, first_name, last_name, title, salary, name AS department, manager_id FROM employee 
             LEFT JOIN role 
             ON employee.role_id = role.id LEFT JOIN department
             ON department.id = role.department_id
@@ -244,16 +270,17 @@ async function getAllManagers() {
         let rObj = {
             name: obj.manager_id
         }
-        // console.log(rObj);
+        console.log(rObj);
         return rObj
     })
     return newQuery;
 }
 
 async function getAllRoles() {
-    let query = await connection.query(`SELECT title FROM role`);
+    let query = await connection.query(`SELECT id, title FROM role`);
     let newQuery = query.map(obj => {
         let rObj = {
+            id: obj.id,
             name: obj.title
         }
         // console.log(rObj);
@@ -322,11 +349,6 @@ function addNewEmployee() {
     },
     {
         type: "input",
-        message: "What is your new employee code?",
-        name: "code"
-    },
-    {
-        type: "input",
         message: "What is your new employee's first name?",
         name: "first_name"
     },
@@ -348,8 +370,8 @@ function addNewEmployee() {
 ];
 
 prompt(question).then((answer) => {
-    connection.query('INSERT INTO employee (id, code, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?, ?);', 
-    [answer.id, answer.code, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], 
+    connection.query('INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?);', 
+    [answer.id, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], 
     (err, result) => {
         if (err) throw err;
         console.log("Success!");
@@ -405,6 +427,42 @@ prompt(question).then((answer) => {
             switch (answer.action) {
                 case "View results":
                     viewAllRoles();
+                    break;
+
+                case "Edit more details":
+                    init();
+                    break;
+
+                case "End application":
+                    process.exit();
+            }
+        })
+    })
+})
+}
+
+function updateRole() {
+    const question = [{
+        type: "input",
+        message: "Which employee's role would you like to change? Please enter employee's ID",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "Which role would you like to change this person to? Please enter role ID.",
+        name: "roleId"
+    }
+];
+
+prompt(question).then((answer) => {
+    connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.roleId, answer.id], (err, result) => {
+        if (err) throw err;
+        console.log("Success!");
+
+        prompt(exitQuestion).then((answer) => {
+            switch (answer.action) {
+                case "View results":
+                    printAll();
                     break;
 
                 case "Edit more details":

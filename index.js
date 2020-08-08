@@ -92,20 +92,20 @@ function viewAllEmployeesDetails() {
     prompt(viewEmployeeQuestion).then((answer) => {
         switch (answer.viewBy) {
             case "Department":
-            printAllByDepartment();
-            break;
+                printAllByDepartment();
+                break;
 
             case "Manager":
-            printAllByManager();
-            break;
+                printAllByManager();
+                break;
 
             case "Role":
-            printAllByRole();
-            break; 
+                printAllByRole();
+                break;
 
             case "View all employees":
-            printAll();
-            break;    
+                printAll();
+                break;
         }
     })
 }
@@ -114,16 +114,16 @@ function addNewInfo() {
     prompt(addInfoQuestion).then((answer) => {
         switch (answer.addNew) {
             case "Add a new department":
-            addNewDepartment();
-            break;
+                addNewDepartment();
+                break;
 
-            // case "Add a new employee":
-            //     addNewEmployee();
-            //     break;
+                case "Add a new employee":
+                addNewEmployee();
+                break;
 
-            // case "Add a new role":
-            //     addNewRole();
-            //     break;    
+                // case "Add a new role":
+                //     addNewRole();
+                //     break;    
         }
     })
 }
@@ -146,7 +146,9 @@ async function printAllByDepartment() {
 
     // console.log(question);
 
-    prompt(question).then(({departmentChoice}) => {
+    prompt(question).then(({
+        departmentChoice
+    }) => {
         connection.query(query, [departmentChoice], function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -177,7 +179,9 @@ async function printAllByManager() {
 
     // console.log(question);
 
-    prompt(question).then(({managerChoice}) => {
+    prompt(question).then(({
+        managerChoice
+    }) => {
         connection.query(query, [managerChoice], function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -204,7 +208,9 @@ async function printAllByRole() {
 
     // console.log(question);
 
-    prompt(question).then(({roleChoice}) => {
+    prompt(question).then(({
+        roleChoice
+    }) => {
         connection.query(query, [roleChoice], function (err, res) {
             if (err) throw err;
             console.table(res);
@@ -221,11 +227,11 @@ async function printAll() {
             ON department.id = role.department_id
         `;
 
-        await connection.query(query, function (err, res) {
-            if (err) throw err;
-            console.table(res);
-            init();
-        })
+    await connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        init();
+    })
 }
 
 function getAllDepartments() {
@@ -235,24 +241,28 @@ function getAllDepartments() {
 async function getAllManagers() {
     let query = await connection.query(`SELECT distinct manager_id FROM employee WHERE manager_id IS NOT NULL`);
     let newQuery = query.map(obj => {
-        let rObj = { name: obj.manager_id}
+        let rObj = {
+            name: obj.manager_id
+        }
         // console.log(rObj);
         return rObj
-     })
-     return newQuery;
+    })
+    return newQuery;
 }
 
 async function getAllRoles() {
     let query = await connection.query(`SELECT title FROM role`);
     let newQuery = query.map(obj => {
-        let rObj = { name: obj.title}
+        let rObj = {
+            name: obj.title
+        }
         // console.log(rObj);
         return rObj
-     })
-     return newQuery;
+    })
+    return newQuery;
 }
 
-function viewAllDepartments () {
+function viewAllDepartments() {
     connection.query((`SELECT * FROM department`), (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -262,39 +272,95 @@ function viewAllDepartments () {
 
 function addNewDepartment() {
     const question = [{
-        type: "input",
-        message: "What is your new department ID? (Do not use the same ID)",
-        name: "id"
-      },
-      {
-        type: "input",
-        message: "What is your new department name?",
-        name: "name"
-      }];
+            type: "input",
+            message: "What is your new department ID? (Do not use the same ID)",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is your new department name?",
+            name: "name"
+        }
+    ];
 
-        prompt(question).then((answer) => {
+    prompt(question).then((answer) => {
         connection.query('INSERT INTO department (id, name) VALUES (?, ?)', [answer.id, answer.name], (err, result) => {
             if (err) throw err;
-            console.log("Success!"); 
-            
+            console.log("Success!");
+
             prompt(exitQuestion).then((answer) => {
                 switch (answer.action) {
                     case "View results":
-                    viewAllDepartments();
-                    break;
+                        viewAllDepartments();
+                        break;
 
                     case "Edit more details":
-                    init();
-                    break;
+                        init();
+                        break;
 
                     case "End application":
-                    process.exit();
+                        process.exit();
                 }
             })
         })
     })
 }
 
+function addNewEmployee() {
+    const question = [{
+        type: "input",
+        message: "What is your new employee ID? (Do not use the same ID)",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "What is your new employee code?",
+        name: "code"
+    },
+    {
+        type: "input",
+        message: "What is your new employee's first name?",
+        name: "first_name"
+    },
+    {
+        type: "input",
+        message: "What is your new employee's last name?",
+        name: "last_name"
+    },
+    {
+        type: "input",
+        message: "What is your new employee's role ID?",
+        name: "role_id"
+    },
+    {
+        type: "input",
+        message: "What is your new employee manager ID? (If no manager, enter: Null)",
+        name: "manager_id"
+    }
+];
 
+prompt(question).then((answer) => {
+    connection.query('INSERT INTO employee (id, code, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?, ?);', 
+    [answer.id, answer.code, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], 
+    (err, result) => {
+        if (err) throw err;
+        console.log("Success!");
 
+        prompt(exitQuestion).then((answer) => {
+            switch (answer.action) {
+                case "View results":
+                    printAll();
+                    break;
 
+                case "Edit more details":
+                    init();
+                    break;
+
+                case "End application":
+                    process.exit();
+            }
+        })
+    })
+})
+
+}

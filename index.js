@@ -144,12 +144,12 @@ function updateInfo() {
     prompt(updateInfoQuestion).then((answer) => {
         switch (answer.update) {
             case "Update employee's role":
-                updateRole();
+                updateEmployeeRole();
                 break;
 
-                // case "Update employee's manager":
-                // updateManager();
-                // break;  
+                case "Update employee's manager":
+                updateEmployeeManager();
+                break;  
         }
     })
 }
@@ -426,7 +426,7 @@ prompt(question).then((answer) => {
 })
 }
 
-function updateRole() {
+function updateEmployeeRole() {
     const question = [{
         type: "input",
         message: "Which employee's role would you like to change? Please enter employee's ID",
@@ -441,6 +441,28 @@ function updateRole() {
 
 prompt(question).then((answer) => {
     connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.roleId, answer.id], (err, result) => {
+        if (err) throw err;
+        console.log("Success!");
+        exitOptionPrintAll();
+    })
+})
+}
+
+function updateEmployeeManager() {
+    const question = [{
+        type: "input",
+        message: "Which employee's manager would you like to change? Please enter employee's ID",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "Please enter the employee's new manager (enter manager id, if no manager enter: Null)",
+        name: "managerId"
+    }
+];
+
+prompt(question).then((answer) => {
+    connection.query('UPDATE employee SET manager_id = ? WHERE id = ?', [answer.managerId, answer.id], (err, result) => {
         if (err) throw err;
         console.log("Success!");
         exitOptionPrintAll();

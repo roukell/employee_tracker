@@ -4,7 +4,7 @@ const fs = require("fs");
 const mysql = require("mysql");
 const cTable = require('console.table');
 const util = require("util");
-const Choices = require("inquirer/lib/objects/choices");
+const Font = require('ascii-art-font');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -75,11 +75,17 @@ const exitQuestion = {
 
 connection.query = util.promisify(connection.query);
 
-connection.connect(err => {
+Font.fontPath = './node_modules/ascii-art-font/Fonts/';
+
+Font.create('Employee Tracker', 'Doom', (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    connection.connect(err => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     init();
 });
+})
 
 function init() {
     prompt(generalQuestion)
@@ -270,7 +276,7 @@ async function getAllManagers() {
         let rObj = {
             name: obj.manager_id
         }
-        console.log(rObj);
+        // console.log(rObj);
         return rObj
     })
     return newQuery;

@@ -121,9 +121,9 @@ function addNewInfo() {
                 addNewEmployee();
                 break;
 
-                // case "Add a new role":
-                //     addNewRole();
-                //     break;    
+                case "Add a new role":
+                addNewRole();
+                break;    
         }
     })
 }
@@ -270,6 +270,14 @@ function viewAllDepartments() {
     })
 }
 
+function viewAllRoles() {
+    connection.query((`SELECT * FROM role`), (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        process.exit();
+    })
+}
+
 function addNewDepartment() {
     const question = [{
             type: "input",
@@ -363,4 +371,50 @@ prompt(question).then((answer) => {
     })
 })
 
+}
+
+function addNewRole() {
+    const question = [{
+        type: "input",
+        message: "What is the ID for this role? (Do not use the same ID)",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "What is its title?",
+        name: "title"
+    },
+    {
+        type: "input",
+        message: "Enter the salary of the role",
+        name: "salary"
+    },
+    {
+        type: "input",
+        message: "What is the department ID for this role?",
+        name: "department_id"
+    }
+];
+
+prompt(question).then((answer) => {
+    connection.query('INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?);', [answer.id, answer.title, answer.salary, answer.department_id], (err, result) => {
+        if (err) throw err;
+        console.log("Success!");
+
+        prompt(exitQuestion).then((answer) => {
+            switch (answer.action) {
+                case "View results":
+                    viewAllRoles();
+                    break;
+
+                case "Edit more details":
+                    init();
+                    break;
+
+                case "End application":
+                    process.exit();
+            }
+        })
+    })
+})
 }

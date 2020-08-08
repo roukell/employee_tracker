@@ -375,24 +375,9 @@ prompt(question).then((answer) => {
     (err, result) => {
         if (err) throw err;
         console.log("Success!");
-
-        prompt(exitQuestion).then((answer) => {
-            switch (answer.action) {
-                case "View results":
-                    printAll();
-                    break;
-
-                case "Edit more details":
-                    init();
-                    break;
-
-                case "End application":
-                    process.exit();
-            }
-        })
+        exitOptionPrintAll();
     })
 })
-
 }
 
 function addNewRole() {
@@ -458,21 +443,24 @@ prompt(question).then((answer) => {
     connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.roleId, answer.id], (err, result) => {
         if (err) throw err;
         console.log("Success!");
-
-        prompt(exitQuestion).then((answer) => {
-            switch (answer.action) {
-                case "View results":
-                    printAll();
-                    break;
-
-                case "Edit more details":
-                    init();
-                    break;
-
-                case "End application":
-                    process.exit();
-            }
-        })
+        exitOptionPrintAll();
     })
 })
+}
+
+function exitOptionPrintAll() {
+    prompt(exitQuestion).then((answer) => {
+        switch (answer.action) {
+            case "View results":
+                printAll();
+                break;
+
+            case "Edit more details":
+                init();
+                break;
+
+            case "End application":
+                process.exit();
+        }
+    })
 }

@@ -517,6 +517,23 @@ async function deleteRole() {
     })
 }
 
+function deleteEmployee() {
+    const question = {
+        type: "input",
+        message: "Which employee would you like to delete? Please enter the ID",
+        name: "action"
+    }
+
+    prompt(question).then((answer) => {
+        // console.log(answer);
+        connection.query('DELETE FROM employee WHERE id = ?', [answer.action], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAll();
+        })
+    })
+}
+
 function exitOptionPrintAll() {
     prompt(exitQuestion).then((answer) => {
         switch (answer.action) {

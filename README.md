@@ -24,7 +24,8 @@
   ## Usage
   1. Please fork this repository to your folder and install dependencies.
   2. Next step is to run `node index.js` in Node.js, and then follow the prompts to manage your employees.
-  3. You will need to install MySQL and MySQL workbench in your computer. 
+  3. You will need to install MySQL and MySQL workbench in your computer.
+  4. Remember to change password in `index.js` line 13 to your MySQL password.
 
   ## License
   * MIT

@@ -23,7 +23,6 @@ const generalQuestion = {
         "Add new information",
         "Update information",
         "Delete information",
-        // "Delete departments, roles, and employees",
         // "View the total utilized budget of a department"
         "End application"
     ]
@@ -94,7 +93,7 @@ Font.create('Employee Tracker', 'Doom', (err, result) => {
     console.log(result);
     connection.connect(err => {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
+    // console.log("connected as id " + connection.threadId);
     init();
 });
 })
@@ -362,21 +361,7 @@ function addNewDepartment() {
         connection.query('INSERT INTO department (id, name) VALUES (?, ?)', [answer.id, answer.name], (err, result) => {
             if (err) throw err;
             console.log("Success!");
-
-            prompt(exitQuestion).then((answer) => {
-                switch (answer.action) {
-                    case "View results":
-                        viewAllDepartments();
-                        break;
-
-                    case "Edit more details":
-                        init();
-                        break;
-
-                    case "End application":
-                        process.exit();
-                }
-            })
+            exitOptionPrintAllDepartment();
         })
     })
 }
@@ -510,7 +495,23 @@ prompt(question).then((answer) => {
 })
 }
 
+async function deleteDepartment() {
+    const question = {
+        type: "list",
+        message: "Which department would you like to delete?",
+        name: "action",
+        choices: await getAllDepartments()
+    }
 
+    prompt(question).then((answer) => {
+        console.log(answer);
+        connection.query('DELETE FROM department WHERE name = ?', [answer.action], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAllDepartment();
+        })
+    })
+}
 
 function exitOptionPrintAll() {
     prompt(exitQuestion).then((answer) => {
@@ -529,3 +530,19 @@ function exitOptionPrintAll() {
     })
 }
 
+function exitOptionPrintAllDepartment() {
+    prompt(exitQuestion).then((answer) => {
+        switch (answer.action) {
+            case "View results":
+                viewAllDepartments();
+                break;
+
+            case "Edit more details":
+                init();
+                break;
+
+            case "End application":
+                process.exit();
+        }
+    })
+}

@@ -22,7 +22,7 @@ const generalQuestion = {
         "View employee details",
         "Add new information",
         "Update information",
-        // "Delete information",
+        "Delete information",
         // "Delete departments, roles, and employees",
         // "View the total utilized budget of a department"
         "End application"
@@ -59,6 +59,18 @@ const updateInfoQuestion = {
     choices: [
         "Update employee's role",
         "Update employee's manager",
+    ]
+};
+
+const deleteInfoQuestion = {
+    type: "list",
+    message: "What information would you like to delete?",
+    name: "delete",
+    choices: [
+        "Delete a department",
+        "Delete a role",
+        "Delete an employee",
+        "Return to main menu"
     ]
 };
 
@@ -99,6 +111,9 @@ function init() {
                     break;
                 case "Update information":
                     updateInfo();
+                    break;
+                case "Delete information":
+                    deleteInfo();
                     break;
                 case "End application":
                     process.exit();
@@ -156,6 +171,25 @@ function updateInfo() {
                 case "Update employee's manager":
                 updateEmployeeManager();
                 break;  
+        }
+    })
+}
+
+function deleteInfo() {
+    prompt(deleteInfoQuestion).then((answer) => {
+        switch (answer.delete) {
+            case "Delete a department":
+                deleteDepartment();
+                break;
+            case "Delete a role":
+                deleteRole();
+                break;
+            case "Delete an employee":
+                deleteEmployee();
+                break;
+            case "Return to main menu":
+                init();
+                break;
         }
     })
 }
@@ -476,6 +510,8 @@ prompt(question).then((answer) => {
 })
 }
 
+
+
 function exitOptionPrintAll() {
     prompt(exitQuestion).then((answer) => {
         switch (answer.action) {
@@ -492,3 +528,4 @@ function exitOptionPrintAll() {
         }
     })
 }
+

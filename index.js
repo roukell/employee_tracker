@@ -23,7 +23,7 @@ const generalQuestion = {
         "Add new information",
         "Update information",
         "Delete information",
-        // "View the total utilized budget of a department"
+        "View the total utilized budget of each department",
         "End application"
     ]
 };
@@ -92,10 +92,10 @@ Font.create('Employee Tracker', 'Doom', (err, result) => {
     if (err) throw err;
     console.log(result);
     connection.connect(err => {
-    if (err) throw err;
-    // console.log("connected as id " + connection.threadId);
-    init();
-});
+        if (err) throw err;
+        // console.log("connected as id " + connection.threadId);
+        init();
+    });
 })
 
 function init() {
@@ -113,6 +113,9 @@ function init() {
                     break;
                 case "Delete information":
                     deleteInfo();
+                    break;
+                case "View the total utilized budget of each department":
+                    viewBudget();
                     break;
                 case "End application":
                     process.exit();
@@ -149,13 +152,13 @@ function addNewInfo() {
                 addNewDepartment();
                 break;
 
-                case "Add a new employee":
+            case "Add a new employee":
                 addNewEmployee();
                 break;
 
-                case "Add a new role":
+            case "Add a new role":
                 addNewRole();
-                break;    
+                break;
         }
     })
 }
@@ -167,9 +170,9 @@ function updateInfo() {
                 updateEmployeeRole();
                 break;
 
-                case "Update employee's manager":
+            case "Update employee's manager":
                 updateEmployeeManager();
-                break;  
+                break;
         }
     })
 }
@@ -368,117 +371,117 @@ function addNewDepartment() {
 
 function addNewEmployee() {
     const question = [{
-        type: "input",
-        message: "What is your new employee ID? (Do not use the same ID)",
-        name: "id"
-    },
-    {
-        type: "input",
-        message: "What is your new employee's first name?",
-        name: "first_name"
-    },
-    {
-        type: "input",
-        message: "What is your new employee's last name?",
-        name: "last_name"
-    },
-    {
-        type: "input",
-        message: "What is your new employee's role ID?",
-        name: "role_id"
-    },
-    {
-        type: "input",
-        message: "What is your new employee manager ID? (If no manager, enter: Null)",
-        name: "manager_id"
-    }
-];
+            type: "input",
+            message: "What is your new employee ID? (Do not use the same ID)",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is your new employee's first name?",
+            name: "first_name"
+        },
+        {
+            type: "input",
+            message: "What is your new employee's last name?",
+            name: "last_name"
+        },
+        {
+            type: "input",
+            message: "What is your new employee's role ID?",
+            name: "role_id"
+        },
+        {
+            type: "input",
+            message: "What is your new employee manager ID? (If no manager, enter: Null)",
+            name: "manager_id"
+        }
+    ];
 
-prompt(question).then((answer) => {
-    connection.query('INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?);', 
-    [answer.id, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], 
-    (err, result) => {
-        if (err) throw err;
-        console.log("Success!");
-        exitOptionPrintAll();
+    prompt(question).then((answer) => {
+        connection.query('INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?);',
+            [answer.id, answer.first_name, answer.last_name, answer.role_id, answer.manager_id],
+            (err, result) => {
+                if (err) throw err;
+                console.log("Success!");
+                exitOptionPrintAll();
+            })
     })
-})
 }
 
 function addNewRole() {
     const question = [{
-        type: "input",
-        message: "What is the ID for this role? (Do not use the same ID)",
-        name: "id"
-    },
-    {
-        type: "input",
-        message: "What is its title?",
-        name: "title"
-    },
-    {
-        type: "input",
-        message: "Enter the salary of the role",
-        name: "salary"
-    },
-    {
-        type: "input",
-        message: "What is the department ID for this role?",
-        name: "department_id"
-    }
-];
+            type: "input",
+            message: "What is the ID for this role? (Do not use the same ID)",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is its title?",
+            name: "title"
+        },
+        {
+            type: "input",
+            message: "Enter the salary of the role",
+            name: "salary"
+        },
+        {
+            type: "input",
+            message: "What is the department ID for this role?",
+            name: "department_id"
+        }
+    ];
 
-prompt(question).then((answer) => {
-    connection.query('INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?);', [answer.id, answer.title, answer.salary, answer.department_id], (err, result) => {
-        if (err) throw err;
-        console.log("Success!");
-        exitOptionPrintAllRole();
+    prompt(question).then((answer) => {
+        connection.query('INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?);', [answer.id, answer.title, answer.salary, answer.department_id], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAllRole();
+        })
     })
-})
 }
 
 function updateEmployeeRole() {
     const question = [{
-        type: "input",
-        message: "Which employee's role would you like to change? Please enter employee's ID",
-        name: "id"
-    },
-    {
-        type: "input",
-        message: "Which role would you like to change this person to? Please enter role ID.",
-        name: "roleId"
-    }
-];
+            type: "input",
+            message: "Which employee's role would you like to change? Please enter employee's ID",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "Which role would you like to change this person to? Please enter role ID.",
+            name: "roleId"
+        }
+    ];
 
-prompt(question).then((answer) => {
-    connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.roleId, answer.id], (err, result) => {
-        if (err) throw err;
-        console.log("Success!");
-        exitOptionPrintAll();
+    prompt(question).then((answer) => {
+        connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.roleId, answer.id], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAll();
+        })
     })
-})
 }
 
 function updateEmployeeManager() {
     const question = [{
-        type: "input",
-        message: "Which employee's manager would you like to change? Please enter employee's ID",
-        name: "id"
-    },
-    {
-        type: "input",
-        message: "Please enter the employee's new manager (enter manager id, if no manager enter: Null)",
-        name: "managerId"
-    }
-];
+            type: "input",
+            message: "Which employee's manager would you like to change? Please enter employee's ID",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "Please enter the employee's new manager (enter manager id, if no manager enter: Null)",
+            name: "managerId"
+        }
+    ];
 
-prompt(question).then((answer) => {
-    connection.query('UPDATE employee SET manager_id = ? WHERE id = ?', [answer.managerId, answer.id], (err, result) => {
-        if (err) throw err;
-        console.log("Success!");
-        exitOptionPrintAll();
+    prompt(question).then((answer) => {
+        connection.query('UPDATE employee SET manager_id = ? WHERE id = ?', [answer.managerId, answer.id], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAll();
+        })
     })
-})
 }
 
 async function deleteDepartment() {
@@ -534,6 +537,28 @@ function deleteEmployee() {
     })
 }
 
+function viewBudget() {
+    const query = `
+    SELECT name AS department, 
+    SUM(DISTINCT salary) AS budget 
+    FROM department 
+    
+    LEFT JOIN role
+    ON department.id = role.department_id
+
+    LEFT JOIN employee
+    ON role.id = employee.role_id
+    
+    GROUP BY name
+    `
+    connection.query(query, (err, result) => {
+        if (err) throw err;
+        console.table(result);
+        init();
+    })
+
+}
+
 function exitOptionPrintAll() {
     prompt(exitQuestion).then((answer) => {
         switch (answer.action) {
@@ -584,5 +609,3 @@ function exitOptionPrintAllRole() {
         }
     })
 }
-
-

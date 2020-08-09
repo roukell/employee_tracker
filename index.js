@@ -36,7 +36,8 @@ const viewEmployeeQuestion = {
         "Department",
         "Manager",
         "Role",
-        "View all employees"
+        "View all employees",
+        "Return to main menu"
     ]
 };
 
@@ -47,7 +48,8 @@ const addInfoQuestion = {
     choices: [
         "Add a new department",
         "Add a new employee",
-        "Add a new role"
+        "Add a new role",
+        "Return to main menu"
     ]
 };
 
@@ -58,6 +60,7 @@ const updateInfoQuestion = {
     choices: [
         "Update employee's role",
         "Update employee's manager",
+        "Return to main menu"
     ]
 };
 
@@ -141,6 +144,10 @@ function viewAllEmployeesDetails() {
             case "View all employees":
                 printAll();
                 break;
+            
+            case "Return to main menu":
+                init();
+                break;
         }
     })
 }
@@ -159,6 +166,10 @@ function addNewInfo() {
             case "Add a new role":
                 addNewRole();
                 break;
+            
+            case "Return to main menu":
+                init();
+                break;
         }
     })
 }
@@ -173,6 +184,10 @@ function updateInfo() {
             case "Update employee's manager":
                 updateEmployeeManager();
                 break;
+
+            case "Return to main menu":
+                init();
+                break;
         }
     })
 }
@@ -183,12 +198,15 @@ function deleteInfo() {
             case "Delete a department":
                 deleteDepartment();
                 break;
+
             case "Delete a role":
                 deleteRole();
                 break;
+
             case "Delete an employee":
                 deleteEmployee();
                 break;
+                
             case "Return to main menu":
                 init();
                 break;

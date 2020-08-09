@@ -432,21 +432,7 @@ prompt(question).then((answer) => {
     connection.query('INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?);', [answer.id, answer.title, answer.salary, answer.department_id], (err, result) => {
         if (err) throw err;
         console.log("Success!");
-
-        prompt(exitQuestion).then((answer) => {
-            switch (answer.action) {
-                case "View results":
-                    viewAllRoles();
-                    break;
-
-                case "Edit more details":
-                    init();
-                    break;
-
-                case "End application":
-                    process.exit();
-            }
-        })
+        exitOptionPrintAllRole();
     })
 })
 }
@@ -504,11 +490,29 @@ async function deleteDepartment() {
     }
 
     prompt(question).then((answer) => {
-        console.log(answer);
+        // console.log(answer);
         connection.query('DELETE FROM department WHERE name = ?', [answer.action], (err, result) => {
             if (err) throw err;
             console.log("Success!");
             exitOptionPrintAllDepartment();
+        })
+    })
+}
+
+async function deleteRole() {
+    const question = {
+        type: "list",
+        message: "Which role would you like to delete?",
+        name: "action",
+        choices: await getAllRoles()
+    }
+
+    prompt(question).then((answer) => {
+        // console.log(answer);
+        connection.query('DELETE FROM role WHERE title = ?', [answer.action], (err, result) => {
+            if (err) throw err;
+            console.log("Success!");
+            exitOptionPrintAllRole();
         })
     })
 }
@@ -546,3 +550,22 @@ function exitOptionPrintAllDepartment() {
         }
     })
 }
+
+function exitOptionPrintAllRole() {
+    prompt(exitQuestion).then((answer) => {
+        switch (answer.action) {
+            case "View results":
+                viewAllRoles();
+                break;
+
+            case "Edit more details":
+                init();
+                break;
+
+            case "End application":
+                process.exit();
+        }
+    })
+}
+
+

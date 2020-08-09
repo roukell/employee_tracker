@@ -206,7 +206,7 @@ function deleteInfo() {
             case "Delete an employee":
                 deleteEmployee();
                 break;
-                
+
             case "Return to main menu":
                 init();
                 break;
@@ -410,7 +410,7 @@ function addNewEmployee() {
         },
         {
             type: "input",
-            message: "What is your new employee manager ID? (If no manager, enter: Null)",
+            message: "What is your new employee manager ID?",
             name: "manager_id"
         }
     ];
@@ -488,7 +488,7 @@ function updateEmployeeManager() {
         },
         {
             type: "input",
-            message: "Please enter the employee's new manager (enter manager id, if no manager enter: Null)",
+            message: "Please enter the employee's new manager (enter manager id)",
             name: "managerId"
         }
     ];

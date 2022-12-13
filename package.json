@@ -20,7 +20,7 @@
     "ascii-art": "^2.5.0",
     "ascii-art-table": "^1.0.1",
     "console.table": "^0.10.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "inquirer": "^7.3.3",
     "mysql": "^2.18.1"
   }
